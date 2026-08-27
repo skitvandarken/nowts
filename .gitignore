@@ -12,3 +12,10 @@ bin/
 
 # Node / Dev modules
 node_modules/
+
+# Executable binary
+now
+now.exe
+
+# Scaffolded source directory
+src/
