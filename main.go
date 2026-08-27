@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"context"
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -11,33 +12,76 @@ import (
 	"nowts/internal/config"
 	"nowts/internal/dev"
 	"nowts/internal/remote"
+	"nowts/internal/scaffold"
 	"nowts/internal/server"
 )
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: now <command> [options]")
-		fmt.Println("Commands: init [--dev], serve, run")
+		printUsage()
 		os.Exit(1)
 	}
 
-	command := os.Args[1]
+	// Subcommands
+	initCmd := flag.NewFlagSet("init", flag.ExitOnError)
+	devInit := initCmd.Bool("dev", false, "Quick initialize dev mode environment")
 
-	switch command {
+	generateCmd := flag.NewFlagSet("generate", flag.ExitOnError)
+
+	switch os.Args[1] {
 	case "init":
-		if len(os.Args) > 2 && os.Args[2] == "--dev" {
+		initCmd.Parse(os.Args[2:])
+		if *devInit {
 			runDevInit()
 		} else {
 			runInit()
 		}
+
+	case "g", "generate":
+		generateCmd.Parse(os.Args[2:])
+		
+		// generateCmd.Arg(0) -> "component" or "c"
+		// generateCmd.Arg(1) -> actual name (e.g., "header")
+		targetType := generateCmd.Arg(0)
+		targetName := generateCmd.Arg(1)
+
+		switch targetType {
+		case "component", "c":
+			if targetName == "" {
+				fmt.Println("❌ Error: Missing component name.")
+				fmt.Println("Usage: now generate component <name>")
+				os.Exit(1)
+			}
+			gen := scaffold.NewComponentGenerator(targetName, "src/components")
+			if err := gen.Generate(); err != nil {
+				fmt.Printf("❌ Scaffolding failed: %v\n", err)
+				os.Exit(1)
+			}
+		default:
+			fmt.Printf("Unknown generator target '%s'. Supported: component (c)\n", targetType)
+			os.Exit(1)
+		}
+
 	case "serve", "dev":
 		runServe()
+
 	case "run", "build":
 		runDeploy()
+
 	default:
-		fmt.Printf("Command '%s' not recognized.\n", command)
+		fmt.Printf("Command '%s' not recognized.\n", os.Args[1])
+		printUsage()
 		os.Exit(1)
 	}
+}
+
+func printUsage() {
+	fmt.Println("Usage: now <command> [options]")
+	fmt.Println("\nCommands:")
+	fmt.Println("  init [--dev]              Initialize configuration")
+	fmt.Println("  generate component <name> Generate NowTS component triad (.now.ts, .now.html, .now.css)")
+	fmt.Println("  serve / dev               Run development server with tsgo type check")
+	fmt.Println("  run / build               Type check and deploy build")
 }
 
 func runDevInit() {

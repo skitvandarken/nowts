@@ -1,0 +1,6 @@
+/* header.now.css */
+.header-container {
+  display: block;
+  padding: 1rem;
+  box-sizing: border-box;
+}
