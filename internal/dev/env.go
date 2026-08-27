@@ -7,7 +7,7 @@ import (
 
 func EnsureGitignore() {
 	giPath := ".gitignore"
-	entry := "\n# nowTS deployment config\n.now/\n"
+	entry := "\n# nowTS local configs & secrets\n.now/\n*.key\n"
 
 	content, err := os.ReadFile(giPath)
 	if err == nil && strings.Contains(string(content), ".now/") {

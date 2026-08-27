@@ -24,14 +24,3 @@ Whether deploying to a $2/month cPanel shared host or a minimal 512MB RAM Linux 
 * 🖼️ **Native Asset Optimization:** Automatically compresses and converts `public/` assets (PNG, JPEG) into WebP/AVIF during development (`now serve`) and production (`now run`).
 * 📦 **Angular-Inspired CLI Ergonomics:** Generate structured components, services, and guards effortlessly using clean commands like `now g c <name>`.
 * 🌐 **Infrastructure Freedom:** Zero vendor lock-in. Native support for Caddy, Nginx, and Apache/LiteSpeed (`.htaccess` auto-generation).
-
----
-
-## 🛠️ Quick Start
-
-### 1. Installation
-
-Install the native standalone `now` CLI binary:
-
-```bash
-curl -sSL [https://nowts.dev/install.sh](https://nowts.dev/install.sh) | sh
