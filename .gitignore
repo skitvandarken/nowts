@@ -1,4 +1,14 @@
 
 # nowTS deployment config
 .now/
-/remote/
+/remote/# Binaries & builds
+now
+dist/
+bin/
+
+# Runtime storage
+.now/
+*.tmp
+
+# Node / Dev modules
+node_modules/
